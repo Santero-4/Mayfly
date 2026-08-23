@@ -5,7 +5,7 @@ https://janlukas.blog/.rss
 https://claytonerrington.com/feed.xml
 https://thehistoryoftheweb.com/feed/
 https://www.rostrum.blog/index.xml
-https://daringfireball.net/feeds/main
+https://daringfireball.net/feeds/articles
 https://www.anildash.com/feed.xml
 https://www.nplusonemag.com/feed/
 https://follow.it/fransundblad-2/rss

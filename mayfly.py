@@ -5,6 +5,34 @@ import time
 import requests
 import concurrent.futures as threads
 import calendar
+import datetime
+
+def date_handler_1(date_string):
+    try:
+        dt = datetime.datetime.strptime(date_string, "%d %b %Y, %H:%M:%S %z")
+        return dt.utctimetuple()
+    except ValueError:
+        return None
+
+
+
+def date_handler_2(date_string):
+    try:
+        dt = datetime.datetime.strptime(date_string, "%B %d, %Y")
+        return dt.utctimetuple()
+    except ValueError:
+        return None
+
+def date_handler_3(date_string):
+    try:
+        dt = datetime.datetime.strptime(date_string, "%a, %d %b %Y %H:%M:%S %z")
+        if dt.year < 2010:
+            dt = dt.replace(year=2010)
+        return dt.utctimetuple()
+    except ValueError:
+        return None
+
+
 
 
 def convert_times(time_object, raw):
@@ -24,7 +52,7 @@ def get_today():
     return x
 
 def get_today_no_year():
-    x = time.strftime("%m-%d", time.localtime(time.time() - 0*(86400)))
+    x = time.strftime("%m-%d", time.localtime(time.time() - 1*(86400)))
     return x
 
 def load_urls(filename):
@@ -63,7 +91,7 @@ def stream_output(feed, today):
                 break
 
         if date == today:
-            print(f"{entry.get('title')}: ({entry.get('link')}), posted {date}")
+            print(f"{entry.get('title')},  by {feed.feed.title:} ({entry.get('link')}), posted {date}")
         else:
             #print(f"{feed.feed.title}, last seen on {date}")
             break
@@ -165,6 +193,9 @@ def retrive_content(feed_list, today):
 
 def main():
     print("hello world")
+    feedparser.registerDateHandler(date_handler_1)
+    feedparser.registerDateHandler(date_handler_2)
+    feedparser.registerDateHandler(date_handler_3)
     today = get_today_no_year()
     urls = load_urls("list.txt")
     #
@@ -187,8 +218,8 @@ def main():
     # print(debug_fast.feed.title)
     # print(debug_fast.entries[0].get("published"))
     #
-    # fetch(["https://daringfireball.net/feeds/main"], today)
-    #fetch(["https://janlukas.blog/.rss"], today)
+    # fetch(["https://daringfireball.net/feeds/articles"], today)
+    # fetch(["https://daringfireball.net/feeds/json"], today)
     # debug_slow = feedparser.parse("https://kevquirk.com/feed")
     # print(debug_slow)
     # print(debug_slow.entries[0].get("published"))
