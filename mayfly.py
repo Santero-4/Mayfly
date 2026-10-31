@@ -44,7 +44,8 @@ def convert_times(time_object, raw):
 
 def get_today_no_year():
     x = time.strftime("%m-%d", time.localtime(time.time() - 1*(86400)))
-    return x
+    y = time.strftime("%m-%d", time.localtime(time.time() - 1*(0)))
+    return (x, y)
 
 def load_urls(filename):
     f = open(filename, "r")
@@ -79,21 +80,20 @@ def stream_output(feed, today):
                 print("Unprocessable dates:", (entry.get("updated"), entry.get("published")))
                 break
 
-        if date == today:
-            print(f"{entry.get('title')},  by {feed.feed.title:} ({entry.get('link')}), posted {date}")
+        if date == today[0] or date == today[1]:
+            print(f"\n{'\033[92m'}[[[NEW!!!]]]{entry.get('title')},  by {feed.feed.title:}{'\033[0m'} , posted {date}-> {'\033[30m'}({entry.get('link')}){'\033[0m'}\n")
         else:
-            #print(f"{feed.feed.title}, last seen on {date}")
+            print(f"{entry.get('title')}, by {feed.feed.title}, posted {date} ->{'\033[30m'}({entry.get('link')}){'\033[0m'}")
             break
     return
 
-def main():
+def main(filename = "list.txt"):
     feedparser.registerDateHandler(date_handler_1)
     feedparser.registerDateHandler(date_handler_2)
     feedparser.registerDateHandler(date_handler_3)
 
     today = get_today_no_year()
-    urls = load_urls("list.txt")
-
+    urls = load_urls(filename)
     fetch(urls, today)
 
 if __name__ == "__main__":
