@@ -45,7 +45,8 @@ def convert_times(time_object, raw):
 def get_today_no_year():
     x = time.strftime("%m-%d", time.localtime(time.time() - 1*(86400)))
     y = time.strftime("%m-%d", time.localtime(time.time() - 1*(0)))
-    return (x, y)
+    z = int(time.strftime("%m", time.localtime(time.time() - 1*(0))))
+    return (x, y, z)
 
 def load_urls(filename):
     f = open(filename, "r")
@@ -83,7 +84,9 @@ def stream_output(feed, today):
         if date == today[0] or date == today[1]:
             print(f"\n{'\033[92m'}[[[NEW!!!]]]{entry.get('title')},  by {feed.feed.title:}{'\033[0m'} , posted {date}-> {'\033[30m'}({entry.get('link')}){'\033[0m'}\n")
         else:
-            print(f"{entry.get('title')}, by {feed.feed.title}, posted {date} ->{'\033[30m'}({entry.get('link')}){'\033[0m'}")
+            month = date.split("-")[0]
+            if month == today[2]:
+                print(f"{entry.get('title')}, by {feed.feed.title}, posted {date} ->{'\033[30m'}({entry.get('link')}){'\033[0m'}")
             break
     return
 
